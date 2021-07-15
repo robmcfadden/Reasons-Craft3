@@ -321,6 +321,10 @@
                                     }).get();
                                     break;
                                 case 'craft\\fields\\Entries':
+                                    var elementSelect = $toggleField.find('[data-reasonselementselect]').data('elementSelect') || null;
+                                    $toggleFieldInput = $toggleField.find('[data-reasonselementselect] input')[0];
+                                    toggleFieldValue = elementSelect && elementSelect.totalSelected ? $toggleFieldInput.value : 'null';
+                                    break;
                                 case 'craft\\fields\\Categories':
                                 case 'craft\\fields\\Tags':
                                 case 'craft\\fields\\Assets':

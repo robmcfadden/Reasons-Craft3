@@ -331,6 +331,17 @@
 
                     // Relational fields
                     case 'craft\\fields\\Entries':
+                        var values = toggleField.entries,
+                            options = [],
+                            option;
+                        for (var i = 0; i < values.length; ++i) {
+                            option = {};
+                            option[values[i].id] = values[i].title;
+                            options.push(option);
+                        }
+                        ruleValueContent = this.templates.select(options, (toggleFieldType === 'MultiSelect' || toggleFieldType === 'Checkboxes'));
+                        break;
+
                     case 'craft\\fields\\Categories':
                     case 'craft\\fields\\Tags':
                     case 'craft\\fields\\Assets':

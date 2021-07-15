@@ -15,6 +15,7 @@ use craft\db\Query;
 use craft\base\Component;
 use craft\base\FieldInterface;
 use craft\db\Table;
+use craft\elements\Entry;
 use craft\elements\User;
 use craft\events\ConfigEvent;
 use craft\events\RebuildConfigEvent;
@@ -444,13 +445,27 @@ class ReasonsService extends Component
             if (!\in_array($fieldType, $toggleFieldTypes)) {
                 continue;
             }
-            $toggleFields[] = [
+            $toggleFieldData = [
                 'id' => (int)$field->id,
                 'handle' => $field->handle,
                 'name' => $field->name,
                 'type' => $fieldType,
                 'settings' => $field->getSettings(),
             ];
+            if ($fieldType === 'craft\\fields\\Entries') {
+                $uid = trim($field->getSettings()['sources'][0], 'section:');
+                $sectionId = Craft::$app->sections->getSectionByUid($uid)->id;
+                $entries = Entry::find()->sectionId($sectionId)->all();
+                $mappedEntries = array_map(function($entry) {
+                    return [
+                        'id' => $entry->id,
+                        'title' => $entry->title,
+                        'slug' => $entry->slug,
+                    ];
+                }, $entries);
+                $toggleFieldData['entries'] = $mappedEntries;
+            }
+            $toggleFields[] = $toggleFieldData;
         }
         return $toggleFields;
     }
