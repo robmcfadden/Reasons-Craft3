@@ -454,16 +454,18 @@ class ReasonsService extends Component
             ];
             if ($fieldType === 'craft\\fields\\Entries') {
                 $uid = trim($field->getSettings()['sources'][0], 'section:');
-                $sectionId = Craft::$app->sections->getSectionByUid($uid)->id;
-                $entries = Entry::find()->sectionId($sectionId)->all();
-                $mappedEntries = array_map(function($entry) {
-                    return [
-                        'id' => $entry->id,
-                        'title' => $entry->title,
-                        'slug' => $entry->slug,
-                    ];
-                }, $entries);
-                $toggleFieldData['entries'] = $mappedEntries;
+                if ($uid) {
+                    $sectionId = Craft::$app->sections->getSectionByUid($uid)->id;
+                    $entries = Entry::find()->sectionId($sectionId)->all();
+                    $mappedEntries = array_map(function($entry) {
+                        return [
+                            'id' => $entry->id,
+                            'title' => $entry->title,
+                            'slug' => $entry->slug,
+                        ];
+                    }, $entries);
+                    $toggleFieldData['entries'] = $mappedEntries;
+                }
             }
             $toggleFields[] = $toggleFieldData;
         }
