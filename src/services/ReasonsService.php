@@ -454,8 +454,9 @@ class ReasonsService extends Component
             ];
             if ($fieldType === 'craft\\fields\\Entries') {
                 $uid = trim($field->getSettings()['sources'][0], 'section:');
-                if ($uid) {
-                    $sectionId = Craft::$app->sections->getSectionByUid($uid)->id;
+                $section = Craft::$app->sections->getSectionByUid($uid);
+                $sectionId = $section ? $section->id : null;
+                if ($sectionId) {
                     $entries = Entry::find()->sectionId($sectionId)->all();
                     $mappedEntries = array_map(function($entry) {
                         return [
